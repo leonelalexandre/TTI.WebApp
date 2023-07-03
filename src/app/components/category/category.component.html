@@ -1,0 +1,164 @@
+<div class="container p-5" *ngIf="tableVisibility">
+  <div class="border boder-light rounded p-5">
+    <div>
+      <button
+        type="button"
+        class="btn btn-sm btn-secondary"
+        (click)="ViewRegistrationForm()"
+      >
+        {{ buttonNew }}
+      </button>
+    </div>
+
+    <hr />
+
+    <table class="table table-striped table-hover table-sm" *ngIf="categories">
+      <tr class="thead-light">
+        <th>{{ fieldDescription }}</th>
+        <th>{{ fieldDescSubCategory }}</th>
+        <th>{{ fieldAction }}</th>
+      </tr>
+
+      <tr *ngFor="let category of categories">
+        <td>{{ category.description }}</td>
+        <td>{{ category.idSubCategoryNavigation.description }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-info"
+            (click)="ViewUpdateForm(category.id)"
+          >
+            {{ buttonUpdate }}</button
+          >|
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-danger"
+            (click)="
+              DisplayConfirmationExclusion(
+                category.id,
+                category.description,
+                conteudoModal
+              )
+            "
+          >
+            {{ buttonDelete }}
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="container p-5" *ngIf="formVisibility">
+  <div class="row">
+    <div class="col-12 border boder-light rounded p-5 shadow" *ngIf="form">
+      <h6>{{ formTitle }}</h6>
+      <hr />
+
+      <form [formGroup]="form" (ngSubmit)="SubmitForm()">
+        <div class="form-group">
+          <label>{{ fieldDescription }}</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="description"
+            required
+          />
+          <div
+            *ngIf="descriptionCat.invalid && (descriptionCat.dirty || descriptionCat.touched)"
+            class="alert alert-danger"
+          >
+            <div *ngIf="descriptionCat.errors?.['required']">{{fieldDescription}} {{msgRequired}}.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{ fieldDescSubCategory }}</label>
+          <select
+            class="form-select form-control form-control-sm"
+            formControlName="IdSubCategory"
+            aria-label=".form-select-sm example"
+            required
+          >
+            <option *ngFor="let subCategory of subCategories" value="{{subCategory.id}}">{{ subCategory.description }}</option>
+          </select>
+          <div
+            *ngIf="IdSubCategory.invalid && (IdSubCategory.dirty || IdSubCategory.touched)"
+            class="alert alert-danger"
+          >
+            <div *ngIf="IdSubCategory.errors?.['required']">{{fieldDescSubCategory}} {{msgRequired}}.</div>
+          </div>
+
+        </div>
+
+        <div class="form-group">
+          <label>{{ fieldIdiom }}</label>
+          <select
+            class="form-select form-control form-control-sm"
+            formControlName="idiom"
+            aria-label=".form-select-sm example"
+            required
+          >
+            <option value="PT-BR">{{ enumValuePortugues }}</option>
+            <option value="EN-US">{{ enumValueEnglish }}</option>
+          </select>
+          <div
+            *ngIf="idiomCat.invalid && (idiomCat.dirty || idiomCat.touched)"
+            class="alert alert-danger"
+          >
+            <div *ngIf="idiomCat.errors?.['required']">{{fieldIdiom}} {{msgRequired}}.</div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div>
+              <button type="submit" class="btn btn-sm btn-outline-secondary">
+                {{ buttonSave }}
+              </button>
+            </div>
+            <div class="pl-1">
+              <button
+                type="button"
+                class="btn btn-sm btn-light"
+                (click)="Back()"
+              >
+                {{ buttonBack }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #conteudoModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ msgConfirDelete }}</h4>
+    <button
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="modalRef.hide()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    {{ msgBodyDelete }}
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modalRef.hide()">
+      {{ buttonConfirmNo }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-danger"
+      (click)="DeleteCategory(id)"
+    >
+      {{ buttonConfirmYes }}
+    </button>
+  </div>
+</ng-template>
