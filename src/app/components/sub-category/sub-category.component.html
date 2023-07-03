@@ -1,0 +1,145 @@
+<div class="container p-5" *ngIf="tableVisibility">
+  <div class="border boder-light rounded p-5">
+    <div>
+      <button
+        type="button"
+        class="btn btn-sm btn-secondary"
+        (click)="ViewRegistrationForm()"
+      >
+        {{ buttonNew }}
+      </button>
+    </div>
+
+    <hr />
+
+    <table
+      class="table table-striped table-hover table-sm"
+      *ngIf="subCategories"
+    >
+      <tr class="thead-light">
+        <th>{{ fieldDescription }}</th>
+        <th>{{ fieldAction }}</th>
+      </tr>
+
+      <tr *ngFor="let subCategory of subCategories">
+        <td>{{ subCategory.description }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-info"
+            (click)="ViewUpdateForm(subCategory.id)"
+          >
+            {{ buttonUpdate }}</button
+          >|
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-danger"
+            (click)="
+              DisplayConfirmationExclusion(
+                subCategory.id,
+                subCategory.description,
+                conteudoModal
+              )
+            "
+          >
+            {{ buttonDelete }}
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="container p-5" *ngIf="formVisibility">
+  <div class="row">
+    <div class="col-12 border boder-light rounded p-5 shadow" *ngIf="form">
+      <h6>{{ formTitle }}</h6>
+      <hr />
+
+      <form [formGroup]="form" (ngSubmit)="SubmitForm()">
+        <div class="form-group">
+          <label>{{ fieldDescription }}</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="description"
+            required
+          />
+          <div
+            *ngIf="description.invalid && (description.dirty || description.touched)"
+            class="alert alert-danger"
+          >
+            <div *ngIf="description.errors?.['required']">{{fieldDescription}} {{msgRequired}}.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{ fieldIdiom }}</label>
+          <select
+            class="form-select form-control form-control-sm"
+            formControlName="idiom"
+            aria-label=".form-select-sm example"
+            required
+          >
+            <option value="PT-BR">{{ enumValuePortugues }}</option>
+            <option value="EN-US">{{ enumValueEnglish }}</option>
+          </select>
+          <div
+            *ngIf="idiom.invalid && (idiom.dirty || idiom.touched)"
+            class="alert alert-danger"
+          >
+            <div *ngIf="idiom.errors?.['required']">{{idiomCat}} {{msgRequired}}.</div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div>
+              <button type="submit" class="btn btn-sm btn-outline-secondary">
+                {{ buttonSave }}
+              </button>
+            </div>
+            <div class="pl-1">
+              <button
+                type="button"
+                class="btn btn-sm btn-light"
+                (click)="Back()"
+              >
+                {{ buttonBack }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #conteudoModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ msgConfirDelete }}</h4>
+    <button
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="modalRef.hide()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    {{ msgBodyDelete }}
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modalRef.hide()">
+      {{ buttonConfirmNo }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-danger"
+      (click)="DeleteSubCategory(id)"
+    >
+      {{ buttonConfirmYes }}
+    </button>
+  </div>
+</ng-template>
